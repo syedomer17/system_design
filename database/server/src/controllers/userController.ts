@@ -42,3 +42,61 @@ export const createUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+// Get a single user by ID
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    // Find user by ID
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User fetched successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Optional: Get user by email
+export const getUserByEmail = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.query;
+
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User fetched successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
+
+// Create multiple users (bulk insert)
+export const createMultipleUsers = async (req: Request, res: Response) => {
+  try {
+    const users = req.body.users;
+
+    if (!Array.isArray(users) || users.length === 0) {
+      return res.status(400).json({ message: "Users array is required" });
+    }
+
+    const insertedUsers = await User.insertMany(users);
+    res.status(201).json({
+      message: `${insertedUsers.length} users created successfully`,
+      users: insertedUsers,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
