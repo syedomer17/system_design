@@ -28,3 +28,17 @@ export const getUsers = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+// Create a new user
+export const createUser = async (req: Request, res: Response) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const newUser = new User({ name, email, password });
+    await newUser.save();
+
+    res.status(201).json({ message: "User created successfully", user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+};
