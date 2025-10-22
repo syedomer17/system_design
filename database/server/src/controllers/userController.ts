@@ -100,3 +100,13 @@ export const createMultipleUsers = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+
+//testing of the api call without pegination and indexes
+export const getAllName = async (req: Request, res: Response) => {
+  try {
+    const users = await User.find({}, 'name'); // Fetch only the 'name' field
+    res.status(200).json({ data: users });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error });
+  }
+}
